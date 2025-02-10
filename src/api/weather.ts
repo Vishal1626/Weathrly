@@ -1,5 +1,5 @@
 import { API_CONFIG } from "./config";
-import {
+import type {
   Coordinates,
   ForecastData,
   GeoCodingResponse,

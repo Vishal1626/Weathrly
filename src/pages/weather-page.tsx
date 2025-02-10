@@ -2,6 +2,11 @@ import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { useGeolocation } from "@/hooks/useGeolocation";
+import {
+  useForecastQuery,
+  useReverseGeoCodeQuery,
+  useWeatherQuery,
+} from "@/hooks/useWeather";
 import { AlertTriangle, RefreshCcw } from "lucide-react";
 
 const WeatherPage = () => {
@@ -11,11 +16,18 @@ const WeatherPage = () => {
     error,
     getLocation,
   } = useGeolocation();
-  console.log(coordinates);
+
+  const locationQuery = useReverseGeoCodeQuery(coordinates);
+  const weatherQuery = useWeatherQuery(coordinates);
+  const forecastQuery = useForecastQuery(coordinates);
+  //console.log(locationQuery);
+
   const handleRefresh = () => {
     getLocation();
     if (coordinates) {
-      //reload weather data
+      weatherQuery.refetch();
+      locationQuery.refetch();
+      forecastQuery.refetch();
     }
   };
 
@@ -50,7 +62,7 @@ const WeatherPage = () => {
     <div>
       {/* fav cities */}
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold tracking-tight">My Location</h1>
+        <h1 className="text-xl font-bold tracking-tight">My Location </h1>
         <Button
           variant={"outline"}
           size={"icon"}
