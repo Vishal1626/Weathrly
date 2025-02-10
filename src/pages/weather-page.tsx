@@ -1,6 +1,8 @@
+import LoadingSkeleton from "@/components/LoadingSkeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { useGeolocation } from "@/hooks/useGeolocation";
-import { RefreshCcw } from "lucide-react";
+import { AlertTriangle, RefreshCcw } from "lucide-react";
 
 const WeatherPage = () => {
   const {
@@ -18,11 +20,30 @@ const WeatherPage = () => {
   };
 
   if (locationLoading) {
-    //skeleton
+    return <LoadingSkeleton />;
   }
 
   if (error) {
-    //show error
+    return (
+      <Alert variant="destructive">
+        <AlertTriangle className="h-4 w-4" />
+        <AlertTitle>Location Error</AlertTitle>
+        <AlertDescription>
+          <p> {error}</p>
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (!coordinates) {
+    return (
+      <Alert variant="destructive">
+        <AlertTitle>Location Error</AlertTitle>
+        <AlertDescription>
+          <p> PLease enable location access to see your local weather.</p>
+        </AlertDescription>
+      </Alert>
+    );
   }
 
   return (
