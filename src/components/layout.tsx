@@ -10,7 +10,7 @@ const Layout = ({ children }: PropsWithChildren) => {
       </main>
       <footer className="border-t backdrop-blur py-12 supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto py-4 text-center text-gray-500">
-          <p>Klimate app to check climate data</p>
+          <p>💻 by Vishal Jadhav</p>
         </div>
       </footer>
     </div>

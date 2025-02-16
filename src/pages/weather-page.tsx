@@ -1,6 +1,10 @@
+import CurrentWeather from "@/components/CurrentWeather";
+import HourlyTemp from "@/components/HourlyTemp";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import WeatherDetails from "@/components/WeatherDetails";
+import WeatherForecast from "@/components/WeatherForecast";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import {
   useForecastQuery,
@@ -20,7 +24,6 @@ const WeatherPage = () => {
   const weatherQuery = useWeatherQuery(coordinates);
   const forecastQuery = useForecastQuery(coordinates);
   const locationQuery = useReverseGeocodeQuery(coordinates);
-  console.log(locationQuery);
 
   const handleRefresh = () => {
     getLocation();
@@ -81,7 +84,6 @@ const WeatherPage = () => {
   if (!weatherQuery.data || !forecastQuery.data) {
     return <LoadingSkeleton />;
   }
-
   return (
     <div>
       {/* fav cities */}
@@ -100,6 +102,20 @@ const WeatherPage = () => {
             }`}
           />
         </Button>
+      </div>
+      <div className="grid gap-6">
+        <div className="flex flex-col lg:flex-row gap-4">
+          <CurrentWeather
+            data={weatherQuery.data}
+            locationName={locationName}
+          />
+          <HourlyTemp data={forecastQuery.data} />
+        </div>
+        <div className="grid gap-6 md:grid-cols-2 itens-stat">
+          <WeatherDetails data={weatherQuery.data} />
+
+          <WeatherForecast data={forecastQuery.data} />
+        </div>
       </div>
     </div>
   );
