@@ -34,3 +34,11 @@ export const useReverseGeocodeQuery = (coordinates: Coordinates | null) => {
     enabled: !!coordinates,
   });
 };
+
+export const useSearchLocation = (query: string) => {
+  return useQuery({
+    queryKey: WEATHER_KEYS.search(query),
+    queryFn: () => (query ? weatherAPI.searchLocations(query) : null),
+    enabled: query.length > 3,
+  });
+};
