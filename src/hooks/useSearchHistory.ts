@@ -1,16 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalStorage } from "./useLocalStorage";
-
-interface searchHistoryItem {
-  id: string;
-  query: string;
-  lat: number;
-  lon: number;
-  name: string;
-  country: string;
-  state?: string;
-  searchedAt: number;
-}
+import type { searchHistoryItem } from "@/api/types";
 
 export const useSearchHistory = () => {
   const [history, setHistory] = useLocalStorage<searchHistoryItem[]>(
@@ -26,23 +16,24 @@ export const useSearchHistory = () => {
   });
 
   const addToHistory = useMutation({
-    mutationFn:
-      async () => (search: Omit<searchHistoryItem, "id" | "searchedAt">) => {
-        const newSearch: searchHistoryItem = {
-          ...search,
-          id: `${search.lat}-${search.lon}-${Date.now()}`,
-          searchedAt: Date.now(),
-        };
+    mutationFn: async (
+      search: Omit<searchHistoryItem, "id" | "searchedAt">
+    ) => {
+      const newSearch: searchHistoryItem = {
+        ...search,
+        id: `${search.lat}-${search.lon}-${Date.now()}`,
+        searchedAt: Date.now(),
+      };
 
-        const filteredHistory = history.filter(
-          (item: { lat: number; lon: number }) =>
-            !(item.lat === search.lat && item.lon === search.lon)
-        );
+      const filteredHistory = history.filter(
+        (item: { lat: number; lon: number }) =>
+          !(item.lat === search.lat && item.lon === search.lon)
+      );
 
-        const newHistory = [newSearch, ...filteredHistory].slice(0, 10);
-        setHistory(newHistory);
-        return newHistory;
-      },
+      const newHistory = [newSearch, ...filteredHistory].slice(0, 10);
+      setHistory(newHistory);
+      return newHistory;
+    },
     onSuccess: (newHistory) => {
       queryClient.setQueryData(["search-history"], newHistory);
     },

@@ -1,11 +1,6 @@
 import { Coordinates } from "@/api/types";
 import { useEffect, useState } from "react";
-
-interface GeolocationState {
-  coordinates: Coordinates | null;
-  error: string | null;
-  isLoading: boolean;
-}
+import type { GeolocationState } from "@/api/types";
 
 export const useGeolocation = () => {
   const [location, setLocation] = useState<GeolocationState>({

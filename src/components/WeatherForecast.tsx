@@ -1,4 +1,4 @@
-import type { ForecastData } from "@/api/types";
+import type { ForecastData, DailyForecast } from "@/api/types";
 import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { ArrowDown, ArrowUp, Droplets, Wind } from "lucide-react";
@@ -7,19 +7,6 @@ interface WeatherForecastProp {
   data: ForecastData;
 }
 
-interface DailyForecast {
-  date: number;
-  temp_min: number;
-  temp_max: number;
-  humidity: number;
-  wind: number;
-  weather: {
-    id: number;
-    main: string;
-    description: string;
-    icon: string;
-  };
-}
 const WeatherForecast = ({ data }: WeatherForecastProp) => {
   const dailyForecast = data.list.reduce((acc, forecast) => {
     const date = format(new Date(forecast.dt * 1000), "yyy-mm-dd");

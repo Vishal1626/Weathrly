@@ -58,3 +58,34 @@ export interface GeoCodingResponse {
   country: string;
   state?: string;
 }
+
+export interface searchHistoryItem {
+  id: string;
+  query: string;
+  lat: number;
+  lon: number;
+  name: string;
+  country: string;
+  state?: string;
+  searchedAt: number;
+}
+
+export interface DailyForecast {
+  date: number;
+  temp_min: number;
+  temp_max: number;
+  humidity: number;
+  wind: number;
+  weather: {
+    id: number;
+    main: string;
+    description: string;
+    icon: string;
+  };
+}
+
+export interface GeolocationState {
+  coordinates: Coordinates | null;
+  error: string | null;
+  isLoading: boolean;
+}
