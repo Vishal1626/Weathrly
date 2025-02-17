@@ -2,6 +2,7 @@ import type { ForecastData, DailyForecast } from "@/api/types";
 import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { ArrowDown, ArrowUp, Droplets, Wind } from "lucide-react";
+import { motion } from "framer-motion"; // Import Framer Motion
 
 interface WeatherForecastProp {
   data: ForecastData;
@@ -21,7 +22,7 @@ const WeatherForecast = ({ data }: WeatherForecastProp) => {
       };
     } else {
       acc[date].temp_min = Math.min(acc[date].temp_min, forecast.main.temp_min);
-      acc[date].temp_max = Math.min(acc[date].temp_max, forecast.main.temp_max);
+      acc[date].temp_max = Math.max(acc[date].temp_max, forecast.main.temp_max);
     }
     return acc;
   }, {} as Record<string, DailyForecast>);
@@ -29,22 +30,26 @@ const WeatherForecast = ({ data }: WeatherForecastProp) => {
   const nextDays = Object.values(dailyForecast).splice(0, 6);
 
   const formatTemp = (temp: number) => `${Math.round(temp)}°`;
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Weather Forecast</CardTitle>
+        <CardTitle> Weather Forecast</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
-          {nextDays.map((day) => {
+          {nextDays.map((day, index) => {
             return (
-              <div
+              <motion.div
                 key={day.date}
-                className="grid grid-cols-3 items-center gap-4 rounded-lg border p-4"
+                className="grid grid-cols-3 items-center gap-4 rounded-lg border p-4 transition-transform duration-300 hover:scale-105"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.2 }}
               >
                 <div>
                   <p className="font-medium">
-                    {format(new Date(day.date * 1000), "EEE, MMM, d")}
+                    {format(new Date(day.date * 1000), "EEE, MMM d")}
                   </p>
                   <p className="text-sm text-muted-foreground capitalize">
                     {day.weather.description}
@@ -57,7 +62,7 @@ const WeatherForecast = ({ data }: WeatherForecastProp) => {
                   </span>
                   <span className="flex items-center text-orange-400">
                     <ArrowUp className="mr-1 h-4 w-4" />
-                    {formatTemp(day.temp_min)}
+                    {formatTemp(day.temp_max)}
                   </span>
                 </div>
                 <div className="flex justify-center gap-4">
@@ -67,10 +72,10 @@ const WeatherForecast = ({ data }: WeatherForecastProp) => {
                   </span>
                   <span className="flex items-center gap-1">
                     <Wind className="h-4 w-4 text-blue-400" />
-                    <span className="text-sm">{day.wind}m/s</span>
+                    <span className="text-sm">{day.wind} m/s</span>
                   </span>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

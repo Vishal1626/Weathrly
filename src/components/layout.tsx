@@ -10,7 +10,9 @@ const Layout = ({ children }: PropsWithChildren) => {
       </main>
       <footer className="border-t backdrop-blur py-12 supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto py-4 text-center text-gray-500">
-          <p>💻 by Vishal Jadhav</p>
+          <p className="hover:text-gray-700 transition-colors">
+            💻 by Vishal Jadhav{" "}
+          </p>
         </div>
       </footer>
     </div>

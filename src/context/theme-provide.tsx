@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 type Theme = "dark" | "light" | "system";
 
@@ -58,7 +59,14 @@ export function ThemeProvider({
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
-      {children}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className={`theme-wrapper ${theme}`}
+      >
+        {children}
+      </motion.div>
     </ThemeProviderContext.Provider>
   );
 }

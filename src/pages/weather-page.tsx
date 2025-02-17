@@ -11,7 +11,7 @@ import {
   useReverseGeocodeQuery,
   useWeatherQuery,
 } from "@/hooks/useWeather";
-import { AlertTriangle, MapPin, RefreshCcw } from "lucide-react";
+import { AlertTriangle, MapPin, RefreshCcw, RefreshCw } from "lucide-react";
 
 const WeatherPage = () => {
   const {
@@ -88,19 +88,23 @@ const WeatherPage = () => {
     <div>
       {/* fav cities */}
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold tracking-tight">My Location</h1>
+        <h1 className="text-xl font-bold tracking-tight"></h1>
 
         <Button
           variant={"outline"}
           size={"icon"}
           onClick={handleRefresh}
           disabled={weatherQuery.isFetching || forecastQuery.isFetching}
+          className="relative group"
         >
-          <RefreshCcw
+          <RefreshCw
             className={`h-4 w-4 ${
-              weatherQuery.isFetching ? "animate-spin" : ""
+              weatherQuery.isFetching ? "animate-spin" : "animate-pulse"
             }`}
           />
+          <span className="absolute bottom-full mb-2 hidden w-max rounded bg-gray-800 p-2 text-xs text-white group-hover:block">
+            Refresh Data
+          </span>
         </Button>
       </div>
       <div className="grid gap-6">

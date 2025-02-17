@@ -1,4 +1,3 @@
-import { Coordinates } from "@/api/types";
 import { useEffect, useState } from "react";
 import type { GeolocationState } from "@/api/types";
 
