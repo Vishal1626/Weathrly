@@ -7,14 +7,17 @@ import {
   CommandList,
   CommandSeparator,
 } from "./ui/command";
+import { DialogTitle } from "./ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Button } from "./ui/button";
 import { useState } from "react";
-import { Clock, Loader2, Search, XCircle } from "lucide-react";
+import { Clock, Loader2, Search, Star, XCircle } from "lucide-react";
 import { useSearchLocation } from "@/hooks/useWeather";
 import { useNavigate } from "react-router-dom";
 import { useSearchHistory } from "@/hooks/useSearchHistory";
 import { format } from "date-fns";
 import type { searchHistoryItem } from "@/api/types";
+import { useFavorites } from "@/hooks/useFavorites";
 
 const CitySearch = () => {
   const [open, setOpen] = useState(false);
@@ -23,6 +26,7 @@ const CitySearch = () => {
 
   const { data: locations, isLoading } = useSearchLocation(query);
   const { history, clearHistory, addToHistory } = useSearchHistory();
+  const { favorites } = useFavorites();
 
   const handleSelect = (cityData: string) => {
     const [lat, lon, name, country] = cityData.split("|");
@@ -34,8 +38,9 @@ const CitySearch = () => {
       country,
     });
     setOpen(false);
-    navigate(`/city/${name}??lat=${lat}&lon=${lon}`);
+    navigate(`/city/${name}?lat=${lat}&lon=${lon}`);
   };
+
   return (
     <>
       <Button
@@ -43,10 +48,17 @@ const CitySearch = () => {
         className="relative w-full justify-start text-sm text-muted-foreground sm:pr-12 m:w-40 lg:w-64"
         onClick={() => setOpen(true)}
       >
-        <Search className="mr-2 h-4 w-4/" />
+        <Search className="mr-2 h-4 w-4" />
         Search cities....
       </Button>
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandDialog
+        open={open}
+        onOpenChange={setOpen}
+        aria-describedby={undefined}
+      >
+        <VisuallyHidden>
+          <DialogTitle>Search for a City</DialogTitle>
+        </VisuallyHidden>
         <CommandInput
           value={query}
           placeholder="Search cities...."
@@ -56,17 +68,34 @@ const CitySearch = () => {
           {query.length > 2 && !isLoading && (
             <CommandEmpty>No cities found.</CommandEmpty>
           )}
-          {/* <CommandGroup heading="Favorites">
-            <CommandItem>Calendar</CommandItem>
-          </CommandGroup> */}
-
+          {favorites.length > 0 && (
+            <CommandGroup heading="Favorites">
+              {favorites.map((city: searchHistoryItem) => (
+                <CommandItem
+                  key={city.id}
+                  value={`${city.lat}|${city.lon}|${city.name}|${city.country}`}
+                  onSelect={handleSelect}
+                >
+                  <Star className="mr-2 h-4 w-4 text-yellow-500" />
+                  <span>{city.name}</span>
+                  {city.state && (
+                    <span className="text-sm text-muted-foreground">
+                      , {city.state}
+                    </span>
+                  )}
+                  <span className="text-sm text-muted-foreground">
+                    , {city.country}
+                  </span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
           {history.length > 0 && (
             <>
               <CommandSeparator />
               <CommandGroup>
-                <div className="flex items-center  justify-between px-2 my-2">
+                <div className="flex items-center justify-between px-2 my-2">
                   <p className="text-xs text-muted-foreground">
-                    {" "}
                     Recent Searches
                   </p>
                   <Button
@@ -80,7 +109,7 @@ const CitySearch = () => {
                 </div>
                 {history.map((location: searchHistoryItem) => (
                   <CommandItem
-                    key={`${location.lat}- ${location.lon}`}
+                    key={`${location.lat}-${location.lon}`}
                     value={`${location.lat}|${location.lon}|${location.name}|${location.country}`}
                     onSelect={handleSelect}
                   >
@@ -110,26 +139,24 @@ const CitySearch = () => {
                   <Loader2 className="h-4 w-4 animate-spin" />
                 </div>
               )}
-              {locations.map((location) => {
-                return (
-                  <CommandItem
-                    key={`${location.lat}- ${location.lon}`}
-                    value={`${location.lat}|${location.lon}|${location.name}|${location.country}`}
-                    onSelect={handleSelect}
-                  >
-                    <Search className="mr-2 h-4 w-4" />
-                    <span>{location.name}</span>
-                    {location.state && (
-                      <span className="text-sm text-muted-foreground">
-                        {location.state}
-                      </span>
-                    )}
+              {locations.map((location) => (
+                <CommandItem
+                  key={`${location.lat}-${location.lon}`}
+                  value={`${location.lat}|${location.lon}|${location.name}|${location.country}`}
+                  onSelect={handleSelect}
+                >
+                  <Search className="mr-2 h-4 w-4" />
+                  <span>{location.name}</span>
+                  {location.state && (
                     <span className="text-sm text-muted-foreground">
-                      {location.country}
+                      {location.state}
                     </span>
-                  </CommandItem>
-                );
-              })}
+                  )}
+                  <span className="text-sm text-muted-foreground">
+                    {location.country}
+                  </span>
+                </CommandItem>
+              ))}
             </CommandGroup>
           )}
         </CommandList>

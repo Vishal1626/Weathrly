@@ -1,4 +1,5 @@
 import CurrentWeather from "@/components/CurrentWeather";
+import { FavoriteCities } from "@/components/FavoriteCities";
 import HourlyTemp from "@/components/HourlyTemp";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -86,9 +87,9 @@ const WeatherPage = () => {
   }
   return (
     <div>
-      {/* fav cities */}
+      <FavoriteCities />
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold tracking-tight"></h1>
+        <h1 className="text-xl font-bold tracking-tight pb-4">My Location </h1>
 
         <Button
           variant={"outline"}

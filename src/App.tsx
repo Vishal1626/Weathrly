@@ -6,6 +6,7 @@ import { ThemeProvider } from "./context/theme-provide";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import LoadingSkeleton from "./components/LoadingSkeleton";
+import { Toaster } from "sonner";
 
 // Lazy load pages
 const WeatherPage = lazy(() => import("./pages/weather-page"));
@@ -36,6 +37,7 @@ const App = () => {
               </Routes>
             </Suspense>
           </Layout>
+          <Toaster richColors />
         </ThemeProvider>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
